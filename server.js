@@ -7,7 +7,7 @@ import contactRoutes from "./routes/contactRoutes.js";
 dotenv.config();
 
 const app = express();
-
+//OK
 // Middleware
 app.use(express.json());
 app.use(cors({
