@@ -5,19 +5,29 @@ import cors from "cors";
 import contactRoutes from "./routes/contactRoutes.js";
 
 dotenv.config();
-
 const app = express();
-//OK
+
+// ✅ CORS correctement configuré
+app.use(cors({
+  origin: [
+    "http://localhost:4200",
+    "https://ymaigaportfolio.netlify.app"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true
+}));
+
+// ✅ Pour gérer les requêtes pré-flight OPTIONS
+app.options("*", cors());
+
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: ["http://localhost:4200", "https://ymaigaportfolio.netlify.app/"], // ← tu remplaceras ici ton URL Netlify
-}));
 
 // Routes
 app.use("/api/contact", contactRoutes);
 
-// 🔹 Test route
+// Test route
 app.get("/", (req, res) => {
   res.send("API du portfolio de Youssouf est en ligne ✅");
 });
