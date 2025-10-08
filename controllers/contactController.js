@@ -1,32 +1,22 @@
-// backend/controllers/contactController.js
-import Message from "../models/Message.js";
+import Message from "../models/Message.js"; // ✅ ton modèle existant
 
-// POST /api/contact
-export const envoyerMessage = async (req, res) => {
+// ✅ Contrôleur pour traiter les messages du formulaire
+export const sendMessage = async (req, res) => {
   try {
     const { nom, email, sujet, message } = req.body;
 
+    // Validation basique
     if (!nom || !email || !sujet || !message) {
-      return res.status(400).json({ success: false, error: "Tous les champs sont obligatoires." });
+      return res.status(400).json({ error: "Tous les champs sont obligatoires." });
     }
 
+    // Enregistrement dans MongoDB via ton modèle Message
     const nouveauMessage = new Message({ nom, email, sujet, message });
     await nouveauMessage.save();
 
-    res.status(201).json({ success: true, message: "Message envoyé avec succès !" });
-  } catch (error) {
-    console.error("Erreur lors de l’envoi du message :", error);
-    res.status(500).json({ success: false, error: "Erreur interne du serveur." });
-  }
-};
-
-// ✅ GET /api/contact/messages
-export const getMessages = async (req, res) => {
-  try {
-    const messages = await Message.find().sort({ date: -1 }); // du plus récent au plus ancien
-    res.status(200).json(messages);
-  } catch (error) {
-    console.error("Erreur lors de la récupération des messages :", error);
-    res.status(500).json({ error: "Erreur serveur" });
+    res.status(201).json({ message: "Message enregistré avec succès !" });
+  } catch (err) {
+    console.error("❌ Erreur lors de l’envoi du message :", err);
+    res.status(500).json({ error: "Erreur serveur. Veuillez réessayer plus tard." });
   }
 };
