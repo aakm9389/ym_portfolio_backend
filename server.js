@@ -11,7 +11,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors({
-  origin: ["http://localhost:4200", "https://youssoufmaigaportfolio.netlify.app/"], // ← tu remplaceras ici ton URL Netlify
+  origin: ["http://localhost:4200", "https://ymaigaportfolio.netlify.app/"], // ← tu remplaceras ici ton URL Netlify
 }));
 
 // Routes
