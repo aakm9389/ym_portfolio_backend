@@ -19,7 +19,8 @@ app.use(cors({
 }));
 
 // ✅ Pour gérer les requêtes pré-flight OPTIONS
-app.options("*", cors());
+app.options(/.*/, cors());
+
 
 // Middleware
 app.use(express.json());
