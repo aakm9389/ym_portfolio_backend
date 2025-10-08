@@ -1,10 +1,12 @@
-// backend/routes/contactRoutes.js
 import express from "express";
-import { envoyerMessage, getMessages } from "../controllers/contactController.js";
+import { sendMessage } from "../controllers/contactController.js";
 
 const router = express.Router();
 
-router.post("/", envoyerMessage);
-router.get("/messages", getMessages); // ✅ nouvelle route
+router.post("/", sendMessage); // ✅ route pour envoyer un message
+
+router.get("/", (req, res) => {
+  res.json({ message: "Bienvenue sur l’API contact ✅" });
+});
 
 export default router;

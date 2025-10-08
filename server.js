@@ -17,6 +17,11 @@ app.use(cors({
 // Routes
 app.use("/api/contact", contactRoutes);
 
+// 🔹 Test route
+app.get("/", (req, res) => {
+  res.send("API du portfolio de Youssouf est en ligne ✅");
+});
+
 // Connexion MongoDB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ MongoDB connecté"))
