@@ -7,6 +7,20 @@ import contactRoutes from "./routes/contactRoutes.js";
 dotenv.config();
 const app = express();
 
+
+import nodemailer from "nodemailer";
+
+// ✅ Configuration du transport (ici avec Gmail, tu peux adapter à Yahoo)
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER, // ton e-mail d’envoi
+    pass: process.env.EMAIL_PASS, // ton mot de passe ou App Password
+  },
+});
+
+
+
 // ✅ CORS correctement configuré
 app.use(cors({
   origin: [
