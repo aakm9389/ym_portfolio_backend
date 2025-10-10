@@ -4,12 +4,14 @@ import nodemailer from "nodemailer";
 
 const router = express.Router();
 
-// ✅ Configuration Nodemailer
+// ✅ Configuration du transporteur Brevo (Sendinblue)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.BREVO_HOST,
+  port: process.env.BREVO_PORT,
+  secure: false, // false pour port 587
   auth: {
-    user: process.env.EMAIL_USER, // Ton Gmail d'envoi
-    pass: process.env.EMAIL_PASS, // Mot de passe d’application
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASS,
   },
 });
 
@@ -18,7 +20,7 @@ router.post("/", async (req, res) => {
   try {
     const { nom, email, sujet, message } = req.body;
 
-    // Vérification des champs
+    // Vérification des champs requis
     if (!nom || !email || !sujet || !message) {
       return res.status(400).json({ error: "Tous les champs sont obligatoires." });
     }
@@ -26,10 +28,10 @@ router.post("/", async (req, res) => {
     // 1️⃣ Enregistrement du message dans MongoDB
     await Message.create({ nom, email, sujet, message });
 
-    // 2️⃣ Envoi d’un e-mail de notification aux deux destinataires
+    // 2️⃣ Envoi d’un e-mail de notification aux destinataires
     await transporter.sendMail({
-      from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
-      to: ["youssoufmaiga4289@gmail.com", "aakm9389@gmail.com"], // 👈 plusieurs destinataires
+      from: `"Portfolio Contact" <${process.env.BREVO_USER}>`, // ✅ Utilisation du compte Brevo
+      to: ["youssoufmaiga4289@gmail.com", "aakm9389@gmail.com"], // ✅ plusieurs destinataires
       subject: `📩 Nouveau message reçu : ${sujet}`,
       text: `
 Tu as reçu un nouveau message depuis ton site portfolio :
@@ -44,10 +46,17 @@ ${message}
       `,
     });
 
-    res.status(200).json({ success: true, message: "Message envoyé et notifications transmises ✅" });
+    // ✅ Réponse à l’utilisateur
+    res.status(200).json({
+      success: true,
+      message: "Message envoyé et notifications transmises ✅",
+    });
   } catch (err) {
     console.error("❌ Erreur d’envoi du message :", err);
-    res.status(500).json({ success: false, error: "Erreur serveur. Vérifie le log Render." });
+    res.status(500).json({
+      success: false,
+      error: "Erreur serveur. Vérifie le log Render.",
+    });
   }
 });
 
